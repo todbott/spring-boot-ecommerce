@@ -16,9 +16,8 @@ public class AppUser {
     private long id;
     private String username;
     private String password;
+    private String role;
  
-
-    // "id" needs a default value, I think, because it was throwing an error
 
   
     public long getId() {
@@ -45,17 +44,12 @@ public class AppUser {
       this.password = password;
     }
 
-    // public String getItems() {
-    //     return items;
-    // }
-
-    // public void setItem(String item) {
-    //     this.items = this.items + "," + item;
-    // }
-
-    // public void deleteItem(String item) {
-    //     var commaItem = "," + item;
-    //     this.items = this.items.replace(commaItem, "");
-    // }
+    public String getRole() {
+      return role;
+    }
+  
+    public void setRole(String role) {
+      this.role = role;
+    }   
 
 }

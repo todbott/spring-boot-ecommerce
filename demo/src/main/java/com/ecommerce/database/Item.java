@@ -1,25 +1,29 @@
 package com.ecommerce.database;
 
+import javax.persistence.Entity;
 //import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+@Entity
 public class Item {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private Integer id;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+
+  private long id;
     private String name;
     private String description;
-    private Float price;
+    private String price;
     private String picture;
+    private String inWhoseCart;
 
   
-    public Integer getId() {
+    public Long getId() {
       return id;
     }
   
-    public void setId(Integer id) {
+    public void setId(Long id) {
       this.id = id;
     }
   
@@ -40,11 +44,11 @@ public class Item {
     }
 
     public String getPrice() {
-        return price.toString();
+        return price;
     }
 
     public void setPrice(String price) {
-        this.price = Float.parseFloat(price);
+        this.price = price;
     }
 
     public String getPicture () {
@@ -54,5 +58,13 @@ public class Item {
     public void setPicture (String picture) {
         this.picture = picture;
     }
+
+    public String getInWhoseCart () {
+      return inWhoseCart;
+  }
+
+  public void setInWhoseCart (String inWhoseCart) {
+      this.inWhoseCart = inWhoseCart;
+  }
 
 }

@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 public class UserController {
 
-
-
-
     private UserRepository applicationUserRepository;
     public BCryptPasswordEncoder bCryptPasswordEncoder;
 
