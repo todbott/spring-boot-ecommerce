@@ -17,10 +17,12 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import static com.ecommerce.security.SecurityConstants.LOGIN_URL;
 import static com.ecommerce.security.SecurityConstants.SIGN_UP_URL;
 import static com.ecommerce.security.SecurityConstants.MAIN_SHOP_URL;
 import static com.ecommerce.security.SecurityConstants.SEARCH_SHOP_URL;
 import static com.ecommerce.security.SecurityConstants.UPLOAD_URL;
+import static com.ecommerce.security.SecurityConstants.ADMIN_HOME_URL;
 
 
 @EnableWebSecurity
@@ -44,8 +46,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.POST, SIGN_UP_URL, MAIN_SHOP_URL, SEARCH_SHOP_URL, UPLOAD_URL).permitAll()
-                .antMatchers(HttpMethod.GET, MAIN_SHOP_URL, UPLOAD_URL).permitAll()
+                .antMatchers(HttpMethod.POST
+                , LOGIN_URL
+                , SIGN_UP_URL
+                , MAIN_SHOP_URL
+                , SEARCH_SHOP_URL
+                , UPLOAD_URL
+                , ADMIN_HOME_URL).permitAll()
+
+                .antMatchers(HttpMethod.GET
+                , LOGIN_URL
+                , MAIN_SHOP_URL).permitAll()
+                
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new AuthenticationFilter(authenticationManager()))

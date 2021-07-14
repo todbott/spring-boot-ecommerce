@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>Login</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+</head>
+<body>
+    <section class="my-5">
+        <div class="container">
+            <div class="row">
+                <h2>Shop backend login</h2>
+            </div>
+            <div class="row">
+                <div id="loginArea">
+                    <form id="loginForm" method="post" th:action="@{/login}">
+                        <div class="form-group">
+                            <input type="text" name="name" value="name">
+                            <br>
+                            <input type="password" name="password" value="password">
+                        </div>
+                        <input type="button" onclick='submitForm()' class="btn btn-primary" value="Login">
+                    </form>
+                    <script type="text/javascript">
+                        $('#uploadArea').hide();
+                        function submitForm() {
+                            var fd = JSON.stringify($("#loginForm").serializeArray());
+                            var formData = JSON.parse(fd);
+                            var packet = {
+                                name: formData[0]['value'],
+                                password: formData[1]['value']
+                            };
+
+                            var req = $.ajax({
+                                type: "POST",
+                                url: "http://localhost:8080/login",
+                                data: JSON.stringify(packet),
+                                success: function(){
+                                    var token = req.getResponseHeader('token')
+                                    localStorage.setItem("token", token)
+                                    window.location.href = 'http://localhost:8080/admin_home?Authorization=' + token
+                                },
+                                error: function () {
+                                    alert("invalid credentials")
+                                },
+                                dataType: "html",
+                                contentType : "application/json"
+                                });
+                        }
+                    </script>
+                </div>
+            </div>
+        </div> 
+    </section>   
+</body>
+</html>

@@ -66,27 +66,27 @@ public class MainController {
 
 
   // --- admins can add and delete items from the shop with these 2 endpoints
-  @PostMapping(path="/addItemToShop") 
-  public @ResponseBody String addItem (@RequestParam String name
-  , @RequestParam String description
-  , @RequestParam String price
-  , @RequestParam String picture) {
+  // @PostMapping(path="/addItemToShop") 
+  // public @ResponseBody String addItem (@RequestParam String name
+  // , @RequestParam String description
+  // , @RequestParam String price
+  // , @RequestParam String picture) {
 
-    Item i = new Item();
-    i.setName(name);
-    i.setDescription(description);
-    i.setPrice(price);
-    i.setPicture(picture);
-    i.setInWhoseCart("shop");
-    itemRepository.save(i);
-    return "Saved";
-  }
+  //   Item i = new Item();
+  //   i.setName(name);
+  //   i.setDescription(description);
+  //   i.setPrice(price);
+  //   i.setPicture(picture);
+  //   i.setInWhoseCart("shop");
+  //   itemRepository.save(i);
+  //   return "Saved";
+  // }
 
-  @PostMapping(path="/deleteItemFromShop")
-  public @ResponseBody String deleteItem (@RequestParam Long id) {
-    itemRepository.deleteById(id);
-    return "Deleted";
-  }
+  // @PostMapping(path="/deleteItemFromShop")
+  // public @ResponseBody String deleteItem (@RequestParam Long id) {
+  //   itemRepository.deleteById(id);
+  //   return "Deleted";
+  // }
 
 
 

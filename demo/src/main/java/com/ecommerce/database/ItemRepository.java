@@ -13,5 +13,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
         
     @Query("select i from Item i where i.name like %?1%")
     Iterable<Item> getFilteredItems(String pattern);
+
+    @Query("select i from Item i where i.inWhoseCart = ?1")
+    Iterable<Item> getUsersItems(String user);
     
 }
