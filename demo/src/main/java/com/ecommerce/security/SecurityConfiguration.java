@@ -23,7 +23,7 @@ import static com.ecommerce.security.SecurityConstants.MAIN_SHOP_URL;
 import static com.ecommerce.security.SecurityConstants.SEARCH_SHOP_URL;
 import static com.ecommerce.security.SecurityConstants.UPLOAD_URL;
 import static com.ecommerce.security.SecurityConstants.ADMIN_HOME_URL;
-
+import static com.ecommerce.security.SecurityConstants.BUY_ITEM_URL;
 
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -50,13 +50,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 , LOGIN_URL
                 , SIGN_UP_URL
                 , MAIN_SHOP_URL
-                , SEARCH_SHOP_URL
-                , UPLOAD_URL
-                , ADMIN_HOME_URL).permitAll()
+                , SEARCH_SHOP_URL).permitAll()
 
                 .antMatchers(HttpMethod.GET
                 , LOGIN_URL
-                , MAIN_SHOP_URL).permitAll()
+                , MAIN_SHOP_URL
+                , SEARCH_SHOP_URL).permitAll()
                 
                 .anyRequest().authenticated()
                 .and()

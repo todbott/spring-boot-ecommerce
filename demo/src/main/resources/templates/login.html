@@ -34,12 +34,12 @@
 
                             var req = $.ajax({
                                 type: "POST",
-                                url: "http://localhost:8080/login",
+                                url: "https://analog-context-251208.uc.r.appspot.com/login",
                                 data: JSON.stringify(packet),
                                 success: function(){
                                     var token = req.getResponseHeader('token')
                                     localStorage.setItem("token", token)
-                                    window.location.href = 'http://localhost:8080/admin_home?Authorization=' + token
+                                    window.location.href = 'https://analog-context-251208.uc.r.appspot.com/admin_home?Authorization=' + token
                                 },
                                 error: function () {
                                     alert("invalid credentials")

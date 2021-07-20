@@ -4,6 +4,13 @@
     <title>Admin home</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 </head>
+<style>
+    table, th, td {
+    border: 1px solid black;
+    padding: 20px;
+    margin: 20px;
+    }
+</style>
 <body>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -12,16 +19,21 @@
             var items = "[[${items}]]".substr(1, "[[${items}]]".length-2).split(",");
             var ids = "[[${ids}]]".substr(1, "[[${ids}]]".length-2).split(",");
             for (var i = 0; i < items.length; i++) { 
-                var buttons = $("<label>" + items[i] + "</label><form method='post' action='http://localhost:8080/admin_home'><input type='submit' value='delete'><input type='hidden' name='id' value='" + ids[i] + "'></input></form><br>") 
+                var buttons = $("<tr><td>" + items[i] + "</td><td><form method='post' action='https://analog-context-251208.uc.r.appspot.com/admin_home?Authorization=" + localStorage.token + "&removeFrom=shop&id=" + ids[i] + "'><input type='submit' value='delete'><input type='hidden' name='id' value='" + ids[i] + "'></input></form></td></tr>") 
                 buttons.appendTo('#items'); 
             }
-
-            var yourItems = "[[${yourItems}]]".substr(1, "[[${yourItems}]]".length-2).split(",");
-            var ids = "[[${yourIds}]]".substr(1, "[[${yourIds}]]".length-2).split(",");
-            for (var i = 0; i < items.length; i++) { 
-                var buttons = $("<label>" + items[i] + "</label><form method='post' action='http://localhost:8080/admin_home'><input type='submit' value='remove from cart'><input type='hidden' name='id' value='" + yourIds[i] + "'></input></form><br>") 
-                buttons.appendTo('#yourItems'); 
+            
+            if ("[[${yourItems}]]".length > 2) {
+                var yourItems = "[[${yourItems}]]".substr(1, "[[${yourItems}]]".length-2).split(",");
+                var yourIds = "[[${yourIds}]]".substr(1, "[[${yourIds}]]".length-2).split(",");
+                for (var i = 0; i < yourItems.length; i++) { 
+                var yourButtons = $("<tr><td>" + yourItems[i] + "</td><td><form method='post' action='https://analog-context-251208.uc.r.appspot.com/admin_home?Authorization=" + localStorage.token + "&removeFrom=cart&id=" + yourIds[i] + "'><input type='submit' value='remove from cart'><input type='hidden' name='id' value='" + yourIds[i] + "'></input></form></td></tr>") 
+                yourButtons.appendTo('#yourItems'); 
+                }
+            } else {
+                $('#yourItems').html("<tr><td>No items</td></tr>");
             }
+
         })
     </script>
     <section class="my-5">
@@ -29,27 +41,29 @@
             <div class="row">
                 <h2>Current items in the shop</h2>
             </div>
+            <table id="items">
+
+            </table> 
+            <br>
             <div class="row">
-                <div id="items" class="col-md-8 mx-auto">
-                </div>
-            </div>  
+                <button onclick="window.location.href='https://analog-context-251208.uc.r.appspot.com/upload?Authorization=' + localStorage.token" class="btn btn-primary">Add an item to the shop</button>
+            </div>
+        </div>
+    </section>
+    <section class='my-5'>
+        <div class="container">
             <div class="row">
                 <h2>Current items in user's cart</h2>
             </div>
+            <table id="yourItems">
+
+            </table>
+            <br>
             <div class="row">
-                <div id="yourItems" class="col-md-8 mx-auto">
-                </div>
-            </div>
-            <div class="row">
-                <button onclick="window.location.href='http://localhost:8080/upload?Authorization=' + localStorage.token" class="btn btn-primary">Add an item to the shop</button>
-            </div>
-            <div class="row">
-                ---
-            </div>
-            <div class="row">
-                <button onclick="window.location.href='http://localhost:8080/login'" class="btn btn-secondary">Logout</button>
+                <button onclick="window.location.href='https://analog-context-251208.uc.r.appspot.com/login'" class="btn btn-secondary">Logout</button>
             </div>
         </div>
     </section>  
+
 </body>
 </html>

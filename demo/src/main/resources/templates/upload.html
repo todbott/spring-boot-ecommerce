@@ -7,6 +7,7 @@
     <script type="text/javascript">
         $( document ).ready(function() {
             $("#token").val(localStorage.token);
+            document.getElementById('newItemForm').action = 'https://analog-context-251208.uc.r.appspot.com/upload?Authorization=' + localStorage.token 
         });
     </script>
 </head>
@@ -19,11 +20,11 @@
             <div class="col-md-8 mx-auto">
                 <h2>Add an item to the shop</h2>
                 <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
-                <form id="newItemForm" method="post" action="http://localhost:8080/upload" enctype="multipart/form-data">
+                <form id="newItemForm" method="post" action="https://analog-context-251208.uc.r.appspot.com/upload" enctype="multipart/form-data">
                     <div class="form-group">
                         <input type="text" name="itemName" value="Item name">
                         <br>
-                        <input type="text" name="description" value="Item description">
+                        <textarea rows="5" name="description" value="Item description"></textarea>
                         <br>
                         <input type="text" name="price" value="Item price">
                         <br>

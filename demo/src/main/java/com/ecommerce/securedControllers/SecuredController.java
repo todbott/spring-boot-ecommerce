@@ -14,6 +14,6 @@ public class SecuredController {
     @GetMapping
     public @ResponseBody String reachSecureEndpoint() {
 
-        return "If your are reading this you reached a secure endpoint";
+        return "This was an endpoint used for testing the JWT security system.";
     }
 }

@@ -4,18 +4,13 @@ import com.ecommerce.database.Item;
 import com.ecommerce.database.ItemRepository;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.ui.Model;
 
 @Controller
 public class AdminHomeController {
@@ -31,7 +26,7 @@ public class AdminHomeController {
         ArrayList<String> yourItemsForDisplay = new ArrayList<String>();
 
         // get all the items, for the items list
-        Collection<Item> items = itemRepository.findAll();
+        Iterable<Item> items = itemRepository.getShopItems();
         for (Item i : items) {
             if (itemsForDisplay.indexOf(i.getName()) == -1) {
                 itemsForDisplay.add(i.getName());
@@ -40,10 +35,13 @@ public class AdminHomeController {
         }
 
         // get the items of one particular user
-        Iterable<Item> yourItems = itemRepository.getUsersItems("user");
-        for (Item i : yourItems) {
-            yourItemsForDisplay.add(i.getName());
-            yourIdsForDisplay.add(i.getId());
+        Iterable<Item> yourItems = itemRepository.getUsersItems("user", "user,user");
+        for (Item ii : yourItems) {
+            System.out.println(ii);
+            if (ii.getInWhoseCart() != "shop") {
+                yourItemsForDisplay.add(ii.getName());
+                yourIdsForDisplay.add(ii.getId());
+            }
         }
 
 
@@ -59,18 +57,40 @@ public class AdminHomeController {
 	}
 
     @PostMapping("/admin_home")
-    public ModelAndView deleteFile(@RequestParam("id") Long id) {
+    public ModelAndView deleteFile(@RequestParam("id") Long id
+    , @RequestParam String removeFrom) {
 
+        // This endpoint is used to remove items from the shop,
+        // as well as from the user's cart.
+        // Therefore, we need to specify where we are removing the item from
 
-        itemRepository.deleteById(id);
+        if (removeFrom.equals("shop")) {
+            itemRepository.deleteById(id);
+        } else {
+            itemRepository.blankWhoseCart(id);
+            itemRepository.setWhoseCart("shop", id);
+        }
+
 
         ArrayList<Long> idsForDisplay = new ArrayList<Long>();
         ArrayList<String> itemsForDisplay = new ArrayList<String>();
+        ArrayList<Long> yourIdsForDisplay = new ArrayList<Long>();
+        ArrayList<String> yourItemsForDisplay = new ArrayList<String>();
 
-        Collection<Item> items = itemRepository.findAll();
+        // get all the items, for the items list
+        Iterable<Item> items = itemRepository.getShopItems();
         for (Item i : items) {
-            itemsForDisplay.add(i.getName());
-            idsForDisplay.add(i.getId());
+            if (itemsForDisplay.indexOf(i.getName()) == -1) {
+                itemsForDisplay.add(i.getName());
+                idsForDisplay.add(i.getId());
+            }
+        }
+
+        // get the items of one particular user
+        Iterable<Item> yourItems = itemRepository.getUsersItems("user", "user,user");
+        for (Item ii : yourItems) {
+            yourItemsForDisplay.add(ii.getName());
+            yourIdsForDisplay.add(ii.getId());
         }
 
 
@@ -78,8 +98,9 @@ public class AdminHomeController {
         modelAndView.setViewName("admin_home");
         modelAndView.addObject("items", itemsForDisplay);
         modelAndView.addObject("ids", idsForDisplay);
-        return modelAndView;
-        //return "redirect:/admin_home";
 
+        modelAndView.addObject("yourItems", yourItemsForDisplay);
+        modelAndView.addObject("yourIds", yourIdsForDisplay);       
+        return modelAndView;
     }
 }

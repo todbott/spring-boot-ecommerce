@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/users")
 
+// This allows us to add new users and passwords to the database
 public class UserController {
 
     private UserRepository applicationUserRepository;
