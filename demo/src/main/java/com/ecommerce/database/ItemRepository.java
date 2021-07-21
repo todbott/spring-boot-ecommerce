@@ -19,18 +19,19 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @Modifying
     @Transactional
-    @Query("update Item i set i.inWhoseCart = '' where i.id = ?1")
-    void blankWhoseCart(Long id);
-
-    @Modifying
-    @Transactional
     @Query("update Item i set i.inWhoseCart = ?1 where i.id = ?2")
     void setWhoseCart(String whoseCart, Long id);
         
     @Query("select i from Item i where i.name like %?1% and i.inWhoseCart = 'shop'")
     Iterable<Item> getFilteredItems(String pattern);
 
+    // This is kind of hacky.  Because straight JPQL is used in the setWhoseCart query above,
+    // when the "inWhoseCart" column of the database is updated (from 'shop' to the username),
+    // the username gets written to the column twice, spearated by a comma.
+    // In the future, using an EntityManager to update
+    // entries would solve this problem.
     @Query("select i from Item i where i.inWhoseCart = ?1 or i.inWhoseCart = ?2")
+    //                                              user  or  user,user
     Iterable<Item> getUsersItems(String user, String useruser);
 
     @Query("select i from Item i where i.inWhoseCart = ?1")

@@ -67,8 +67,7 @@ public class AdminHomeController {
         if (removeFrom.equals("shop")) {
             itemRepository.deleteById(id);
         } else {
-            itemRepository.blankWhoseCart(id);
-            itemRepository.setWhoseCart("shop", id);
+              itemRepository.setWhoseCart("shop", id);
         }
 
 
