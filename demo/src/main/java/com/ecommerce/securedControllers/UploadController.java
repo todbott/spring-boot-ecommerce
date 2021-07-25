@@ -33,6 +33,7 @@ public class UploadController {
     , @RequestParam("itemName") String name
     , @RequestParam("description") String description
     , @RequestParam("price") String price
+    , @RequestParam("quantity") String quantity
     , @RequestParam("token") String token
     , RedirectAttributes attributes) throws IOException {
 
@@ -49,13 +50,16 @@ public class UploadController {
         String encodedString = Base64.getEncoder().encodeToString(fileContent);
 
         // put the base64 string into the database with everything else
-        Item ii = new Item();
-        ii.setName(name);
-        ii.setDescription(description);
-        ii.setPrice(price);
-        ii.setPicture(encodedString);
-        ii.setInWhoseCart("shop");
-        itemRepository.save(ii);
+        for (Integer q = 0; q < Integer.parseInt(quantity); q ++) {
+            Item ii = new Item();
+            ii.setName(name);
+            ii.setDescription(description);
+            ii.setPrice(price);
+            ii.setPicture(encodedString);
+            ii.setInWhoseCart("shop");
+            itemRepository.save(ii);
+        }
+
         
        
         return "redirect:/admin_home?Authorization=" + token;

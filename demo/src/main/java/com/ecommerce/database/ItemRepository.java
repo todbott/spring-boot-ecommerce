@@ -12,29 +12,32 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("select i from Item i where i.inWhoseCart = 'shop'")
     Iterable<Item> getShopItems();
 
-    @Modifying
-    @Transactional
-    @Query("update Item i set i.inWhoseCart = ?1 where i.id = ?2")
-    void itemBought(String whoseCart, Long id);
+    @Query("select count(i) FROM Item i where i.inWhoseCart = 'shop' and i.name = ?1")
+    Integer countShopItems(String name);
 
     @Modifying
     @Transactional
-    @Query("update Item i set i.inWhoseCart = ?1 where i.id = ?2")
-    void setWhoseCart(String whoseCart, Long id);
+    @Query("update Item i set i.inWhoseCart = ?1 where i.inWhoseCart = ?2 and i.name = ?3")
+    void itemBought(String whoseCart, String username, String itemName);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE item SET in_whose_cart = ?1 WHERE name = ?2 LIMIT ?3", nativeQuery = true)
+    void setWhoseCart(String whoseCart, String itemName, Integer quantity);
         
     @Query("select i from Item i where i.name like %?1% and i.inWhoseCart = 'shop'")
     Iterable<Item> getFilteredItems(String pattern);
+    
+    @Query("select i from Item i where i.inWhoseCart = ?1")
+    Iterable<Item> getUsersItems(String user);
 
-    // This is kind of hacky.  Because straight JPQL is used in the setWhoseCart query above,
-    // when the "inWhoseCart" column of the database is updated (from 'shop' to the username),
-    // the username gets written to the column twice, spearated by a comma.
-    // In the future, using an EntityManager to update
-    // entries would solve this problem.
-    @Query("select i from Item i where i.inWhoseCart = ?1 or i.inWhoseCart = ?2")
-    //                                              user  or  user,user
-    Iterable<Item> getUsersItems(String user, String useruser);
+    @Query("select count(i) FROM Item i where i.inWhoseCart = ?1 and i.name = ?2")
+    Integer countUsersItems(String user, String itemName);
 
     @Query("select i from Item i where i.inWhoseCart = ?1")
     Iterable<Item> getOrders(String user);
+
+    @Query(value = "delete i from item i where name = ?1", nativeQuery = true)
+    void deleteByName(String itemName);
     
 }

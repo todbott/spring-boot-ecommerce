@@ -22,8 +22,12 @@ public class AdminHomeController {
 	public ModelAndView greeting() {
         ArrayList<Long> idsForDisplay = new ArrayList<Long>();
         ArrayList<String> itemsForDisplay = new ArrayList<String>();
+        ArrayList<String> picturesForDisplay = new ArrayList<String>();
+        ArrayList<String> quantitiesForDisplay = new ArrayList<String>();
+
         ArrayList<Long> yourIdsForDisplay = new ArrayList<Long>();
         ArrayList<String> yourItemsForDisplay = new ArrayList<String>();
+        ArrayList<String> yourQuantitiesForDisplay = new ArrayList<String>();
 
         // get all the items, for the items list
         Iterable<Item> items = itemRepository.getShopItems();
@@ -31,16 +35,20 @@ public class AdminHomeController {
             if (itemsForDisplay.indexOf(i.getName()) == -1) {
                 itemsForDisplay.add(i.getName());
                 idsForDisplay.add(i.getId());
+                picturesForDisplay.add(i.getPicture());
+                quantitiesForDisplay.add(itemRepository.countShopItems(i.getName()).toString());
             }
         }
 
         // get the items of one particular user
-        Iterable<Item> yourItems = itemRepository.getUsersItems("user", "user,user");
+        Iterable<Item> yourItems = itemRepository.getUsersItems("user");
         for (Item ii : yourItems) {
-            System.out.println(ii);
             if (ii.getInWhoseCart() != "shop") {
-                yourItemsForDisplay.add(ii.getName());
-                yourIdsForDisplay.add(ii.getId());
+                if (yourItemsForDisplay.indexOf(ii.getName()) == -1) {
+                    yourItemsForDisplay.add(ii.getName());
+                    yourIdsForDisplay.add(ii.getId());
+                    yourQuantitiesForDisplay.add(itemRepository.countUsersItems("user", ii.getName()).toString());
+                }
             }
         }
 
@@ -49,57 +57,33 @@ public class AdminHomeController {
         modelAndView.setViewName("admin_home");
         modelAndView.addObject("items", itemsForDisplay);
         modelAndView.addObject("ids", idsForDisplay);
+        modelAndView.addObject("pictures", picturesForDisplay);
+        modelAndView.addObject("quantities", quantitiesForDisplay);
 
         modelAndView.addObject("yourItems", yourItemsForDisplay);
         modelAndView.addObject("yourIds", yourIdsForDisplay);       
+        modelAndView.addObject("yourQuantities", yourQuantitiesForDisplay);  
+
         return modelAndView;
         
 	}
 
     @PostMapping("/admin_home")
-    public ModelAndView deleteFile(@RequestParam("id") Long id
-    , @RequestParam String removeFrom) {
+    public String deleteFile(@RequestParam("itemName") String itemName
+    , @RequestParam String removeFrom
+    , @RequestParam Integer quantity
+    , @RequestParam String Authorization) {
 
         // This endpoint is used to remove items from the shop,
         // as well as from the user's cart.
         // Therefore, we need to specify where we are removing the item from
 
         if (removeFrom.equals("shop")) {
-            itemRepository.deleteById(id);
+            itemRepository.deleteByName(itemName);
         } else {
-              itemRepository.setWhoseCart("shop", id);
+              itemRepository.setWhoseCart("shop", itemName, quantity);
         }
 
-
-        ArrayList<Long> idsForDisplay = new ArrayList<Long>();
-        ArrayList<String> itemsForDisplay = new ArrayList<String>();
-        ArrayList<Long> yourIdsForDisplay = new ArrayList<Long>();
-        ArrayList<String> yourItemsForDisplay = new ArrayList<String>();
-
-        // get all the items, for the items list
-        Iterable<Item> items = itemRepository.getShopItems();
-        for (Item i : items) {
-            if (itemsForDisplay.indexOf(i.getName()) == -1) {
-                itemsForDisplay.add(i.getName());
-                idsForDisplay.add(i.getId());
-            }
-        }
-
-        // get the items of one particular user
-        Iterable<Item> yourItems = itemRepository.getUsersItems("user", "user,user");
-        for (Item ii : yourItems) {
-            yourItemsForDisplay.add(ii.getName());
-            yourIdsForDisplay.add(ii.getId());
-        }
-
-
-		ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("admin_home");
-        modelAndView.addObject("items", itemsForDisplay);
-        modelAndView.addObject("ids", idsForDisplay);
-
-        modelAndView.addObject("yourItems", yourItemsForDisplay);
-        modelAndView.addObject("yourIds", yourIdsForDisplay);       
-        return modelAndView;
+        return "redirect:/admin_home?Authorization=" + Authorization;
     }
 }

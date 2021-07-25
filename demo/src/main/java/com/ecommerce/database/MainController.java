@@ -32,40 +32,38 @@ public class MainController {
   // --- these are all the endpoints used by the user of the app
   // -- add item to cart, remove item from cart, buy item(s), get past orders
   @RequestMapping(path="/addItemToCart") 
-  public @ResponseBody String addItemToCart (@RequestParam Long itemId
-  , @RequestParam String username) {
-    itemRepository.setWhoseCart(username, itemId);
+  public @ResponseBody String addItemToCart (@RequestParam String itemName
+  , @RequestParam String username
+  , @RequestParam Integer quantity) {
+    itemRepository.setWhoseCart(username, itemName, quantity);
     return "Added to cart";
   }
   
   @RequestMapping(path="/deleteItemFromCart")
-  public @ResponseBody String deleteItemFromCart (@RequestParam Long itemId) {
-    itemRepository.setWhoseCart("shop", itemId);
+  public @ResponseBody String deleteItemFromCart (@RequestParam String itemName
+  , @RequestParam Integer quantity) {
+    itemRepository.setWhoseCart("shop", itemName, quantity);
     return "Deleted from cart";
   }
 
   @RequestMapping(path="/getItemsFromCart")
   public @ResponseBody Iterable<Item> getItemsFromCart (@RequestParam String username) {
-    // This is kind of hacky.  Because straight JPQL is used in the itemRepository,
-    // when the "inWhoseCart" column of the database is updated (from 'shop' to the username),
-    // the username gets written to the column twice, spearated by a comma.
-    // In the future, using an EntityManager in the itemRepository to update
-    // entries would solve this problem.
-    String usernameusername = username + "," + username;
-    return itemRepository.getUsersItems(username, usernameusername);
+    return itemRepository.getUsersItems(username);
   }
 
   @RequestMapping(path="/buyItem")
-  public @ResponseBody String itemBought(@RequestParam Long itemId 
+  public @ResponseBody String itemBought(@RequestParam String itemName
   , @RequestParam String username) {
-    username = "bought by:" + username;
-    itemRepository.itemBought(username, itemId);
+    String boughtByUsername = "bought by:" + username;
+    itemRepository.itemBought(boughtByUsername, username, itemName);
+    
+
     return "Marked as bought";
   }
 
   @RequestMapping(path="/getOrders")
   public @ResponseBody Iterable<Item> getOrders(@RequestParam String username) {
-    String usernameusername = "bought by:" + username + "," + username;
-    return itemRepository.getOrders(usernameusername);
+    String boughtByUsername = "bought by:" + username;
+    return itemRepository.getOrders(boughtByUsername);
   }
 }
