@@ -21,7 +21,7 @@
             var pictures = "[[${pictures}]]".substr(1, "[[${pictures}]]".length-2).split(",");
             var quantities = "[[${quantities}]]".substr(1, "[[${quantities}]]".length-2).split(",");
             for (var i = 0; i < items.length; i++) { 
-                var buttons = $("<tr><td>" + items[i] + "<br><b>Quantity:</b> " + quantities[i] + "</td><td><img src='data:image/png;base64, " + pictures[i] + "'></td><td><form method='post' action='https://analog-context-251208.uc.r.appspot.com/admin_home?Authorization=" + localStorage.token + "&removeFrom=shop&itemName=" + items[i] + "'><input type='submit' value='delete'></form></td></tr>") 
+                var buttons = $("<tr><td>" + items[i] + "<br><b>Quantity:</b> " + quantities[i] + "</td><td><img src='data:image/png;base64, " + pictures[i] + "'></td><td><form method='post' action='https://analog-context-251208.uc.r.appspot.com/admin_home?Authorization=" + localStorage.token + "&removeFrom=shop&itemName=" + items[i].trim() + "&quantity=" + quantities[i].trim() + "'><input type='submit' value='delete'></form></td></tr>") 
                 buttons.appendTo('#items'); 
             }
             
@@ -30,7 +30,7 @@
                 var yourIds = "[[${yourIds}]]".substr(1, "[[${yourIds}]]".length-2).split(",");
                 var yourQuantities = "[[${yourQuantities}]]".substr(1, "[[${yourQuantities}]]".length-2).split(",");
                 for (var i = 0; i < yourItems.length; i++) { 
-                var yourButtons = $("<tr><td>" + yourItems[i] + "<br><b>Quantity:</b> " + yourQuantities[i] + "</td><td><form method='post' action='https://analog-context-251208.uc.r.appspot.com/admin_home?Authorization=" + localStorage.token + "&removeFrom=cart&itemName=" + yourItems[i] + "&quantity=" + yourQuantities[i] + "'><input type='submit' value='remove from cart'><input type='hidden' name='id' value='" + yourIds[i] + "'></input></form></td></tr>") 
+                var yourButtons = $("<tr><td>" + yourItems[i] + "<br><b>Quantity:</b> " + yourQuantities[i] + "</td><td><form method='post' action='https://analog-context-251208.uc.r.appspot.com/admin_home?Authorization=" + localStorage.token + "&removeFrom=cart&itemName=" + yourItems[i].trim() + "&quantity=" + yourQuantities[i].trim() + "'><input type='submit' value='remove from cart'><input type='hidden' name='id' value='" + yourIds[i] + "'></input></form></td></tr>") 
                 yourButtons.appendTo('#yourItems'); 
                 }
             } else {

@@ -37,7 +37,9 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("select i from Item i where i.inWhoseCart = ?1")
     Iterable<Item> getOrders(String user);
 
-    @Query(value = "delete i from item i where name = ?1", nativeQuery = true)
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM item WHERE name = ?1", nativeQuery = true)
     void deleteByName(String itemName);
     
 }
