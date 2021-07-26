@@ -22,8 +22,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "UPDATE item SET in_whose_cart = ?1 WHERE name = ?2 LIMIT ?3", nativeQuery = true)
-    void setWhoseCart(String whoseCart, String itemName, Integer quantity);
+    @Query(value = "UPDATE item SET in_whose_cart = ?2 WHERE in_whose_cart = ?1 AND name = ?3 LIMIT ?4", nativeQuery = true)
+    void setWhoseCart(String oldCart, String newCart, String itemName, Integer quantity);
         
     @Query("select i from Item i where i.name like %?1% and i.inWhoseCart = 'shop'")
     Iterable<Item> getFilteredItems(String pattern);

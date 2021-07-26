@@ -35,14 +35,15 @@ public class MainController {
   public @ResponseBody String addItemToCart (@RequestParam String itemName
   , @RequestParam String username
   , @RequestParam Integer quantity) {
-    itemRepository.setWhoseCart(username, itemName, quantity);
+    itemRepository.setWhoseCart("shop", username, itemName, quantity);
     return "Added to cart";
   }
   
   @RequestMapping(path="/deleteItemFromCart")
   public @ResponseBody String deleteItemFromCart (@RequestParam String itemName
+  , @RequestParam String username
   , @RequestParam Integer quantity) {
-    itemRepository.setWhoseCart("shop", itemName, quantity);
+    itemRepository.setWhoseCart(username, "shop", itemName, quantity);
     return "Deleted from cart";
   }
 

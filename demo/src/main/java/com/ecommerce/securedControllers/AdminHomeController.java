@@ -81,7 +81,7 @@ public class AdminHomeController {
         if (removeFrom.equals("shop")) {
             itemRepository.deleteByName(itemName);
         } else {
-              itemRepository.setWhoseCart("shop", itemName, quantity);
+              itemRepository.setWhoseCart("user", "shop", itemName, quantity);
         }
 
         return "redirect:/admin_home?Authorization=" + Authorization;
